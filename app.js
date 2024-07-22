@@ -6,9 +6,13 @@ var uiController = (function () {
         inputValue: ".add__value",
         addBtn: ".add__btn",
         incomeList: '.income__list',
-        expList: ".expenses__list"
+        expList: ".expenses__list",
+        tusuvLabel: ".budget__value",
+        incomeLabel: ".budget__income--value",
+        expeseLabel: ".budget__expenses--value",
+        percentageLabel: ".budget__expenses--percentage"
     }
-    //gej ogsnoor css deer classin oorcllt orhd solihod amar onowctoin boldog.
+    //gej ogsnoor css deer clas sin oorcllt orhd solihod amar onowctoin boldog.
 
     return {
         getInput: function () {
@@ -39,6 +43,12 @@ var uiController = (function () {
             fieldsArr[0].focus();
             //gewel cursoriig haana awaachu gdg code. focus ogjn gsn vg. 
 
+        },
+        tusviigUzuuleh: function (tusuv) {
+            document.querySelector(DOMstrings.tusuvLabel).textContent = tusuv.tusuv;
+            document.querySelector(DOMstrings.incomeLabel).textContent = tusuv.totalInc;
+            document.querySelector(DOMstrings.expeseLabel).textContent = tusuv.totalExp;
+            document.querySelector(DOMstrings.percentageLabel).textContent = tusuv.huvi + '%';
         },
 
         addEventListenertItem: function (item, type) {
@@ -139,7 +149,7 @@ var financeController = (function () {
 })();
 
 // programmin holbogc controller
-var appController = (function (uiController, financeControoller) {
+var appController = (function (uiController, financeController) {
     function addItem() {
         // 1. oruulah ogogdliig delgetsees olj awna. 
         var input = uiController.getInput();
@@ -160,7 +170,7 @@ var appController = (function (uiController, financeControoller) {
         var tusuv = financeController.tusviigAvah();
 
         // 6. toswin tootsog delgetsnd gargana. 
-        console.log(tusuv);
+        uiController.tusviigUzuuleh(tusuv);
 
     }
 
@@ -179,6 +189,12 @@ var appController = (function (uiController, financeControoller) {
     return {
         init: function () {
             console.log("App start...");
+            uiController.tusviigUzuuleh({
+                tusuv: 0,
+                huvi: 0,
+                totalInc: 0,
+                totalExp: 0
+            });
             setupEventListener();
         }
     }
