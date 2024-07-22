@@ -153,25 +153,27 @@ var appController = (function (uiController, financeController) {
     function addItem() {
         // 1. oruulah ogogdliig delgetsees olj awna. 
         var input = uiController.getInput();
-        if (input.description !== "" && input.value !== "") {
+        console.log(input.value);
+        if (input.description !== "" && !isNaN(input.value)) {
+            //buyu too oruulagv vyd nan alda zaadag.
+
             // 2. olj awsan ogogdlvvde sanhvvgin controllert damjuulj tend hadgalna.
             var item = financeController.addItem(input.type, input.description, input.value);
 
             // 3. olj awsan ogogdlvvde tohiroh hesegt n gargana.
             uiController.addEventListenertItem(item, input.type);
+
+            uiController.clearFields();
+
+            // 4. tosowiig tootsoolno. 
+            financeController.tosovTootsooloh();
+
+            // 5. etssiin vldegdel tootsoog delgetsnd gargana.
+            var tusuv = financeController.tusviigAvah();
+
+            // 6. toswin tootsog delgetsnd gargana. 
+            uiController.tusviigUzuuleh(tusuv);
         }
-
-        uiController.clearFields();
-
-        // 4. tosowiig tootsoolno. 
-        financeController.tosovTootsooloh();
-
-        // 5. etssiin vldegdel tootsoog delgetsnd gargana.
-        var tusuv = financeController.tusviigAvah();
-
-        // 6. toswin tootsog delgetsnd gargana. 
-        uiController.tusviigUzuuleh(tusuv);
-
     }
 
     var setupEventListener = function () {
