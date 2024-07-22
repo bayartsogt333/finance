@@ -19,6 +19,25 @@ var uiController = (function () {
         //get ;input duudagdhad oruulsan ogogdlvvdg awnaa gsn vg. select deer bol valueaa zaagad ogoh heregtei. 
         getDOMstrings: function () {
             return DOMstrings;
+        },
+        addEventListenertItem: function (item, type) {
+            // orlogo zarlaga ali bolohig aguulsan htmliig bvteene.
+            var html, incDiv;
+            if (type == "inc") {
+                html = '<div class="item clearfix" id="income-%id%"><div div class="item__description" >$description$</div ><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div > ';
+                incDiv = document.querySelector(".income__list");
+            } else {
+                html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">$description$</div><div class="right clearfix"><div class="item__value">- 900.00</div><div class="item__percentage">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div>';
+                incDiv = document.querySelector(".expenses__list");
+            }
+            //ter html dotroo orlogo zarlagiin utgudg replace ashhiglaj     oorcilj ogno.
+            html = html.replace('%id%', item.id);
+            html = html.replace("$description$", item.description);
+            html = html.replace('%value%', item.value);
+
+            //beltgesem htmlee dom ruu hiij ogno.
+            incDiv.insertAdjacentHTML("beforeend", html);
+            //ingel html nemeed biccij bnaa gsn vg.
         }
     }
 })();
@@ -62,6 +81,7 @@ var financeController = (function () {
                 item = new Expense(id, description, val);
             }
             data.items[type].push(item);
+            return item;
         },
         getData: function () {
             return data;
@@ -76,9 +96,10 @@ var appController = (function (uiController, financeControoller) {
         var input = uiController.getInput();
 
         // 2. olj awsan ogogdlvvde sanhvvgin controllert damjuulj tend hadgalna.s
-        financeController.addItem(input.type, input.description, input.value);
+        var item = financeController.addItem(input.type, input.description, input.value);
 
         // 3. olj awsan ogogdlvvde tohiroh hesegt n gargana.
+        uiController.addEventListenertItem(item, input.type);
 
         // 4. tosowiig tootsoolno. 
 
