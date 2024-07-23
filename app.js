@@ -10,7 +10,8 @@ var uiController = (function () {
         tusuvLabel: ".budget__value",
         incomeLabel: ".budget__income--value",
         expeseLabel: ".budget__expenses--value",
-        percentageLabel: ".budget__expenses--percentage"
+        percentageLabel: ".budget__expenses--percentage",
+        containerDiv: ".container"
     }
     //gej ogsnoor css deer classin oorcllt orhd solihod amar onowctoin boldog.
 
@@ -48,15 +49,21 @@ var uiController = (function () {
             document.querySelector(DOMstrings.expeseLabel).textContent = tusuv.totalExp;
             document.querySelector(DOMstrings.percentageLabel).textContent = tusuv.huvi + '%';
         },
+        removeEventListenerItem: function (id) {
+            //income-listiin child bolj orj irjiiga tvvnig idgaar n barij awaad hascinaa gsn vg.
+            var b = document.getElementById(id);
+            b.parentNode.removeChild(b);
+            //tagiig n ter cigt n olj ogool ennni ene hvvhdiig hascyaal gdg sanaa. var a = document.querySelector(DOMstrings.incomeList); gj zaawal etsgiin hgd bh shaardlggv. parentNode ashiglaal shiidew. 
+        },
 
         addEventListenertItem: function (item, type) {
             // orlogo zarlaga ali bolohig aguulsan htmliig bvteene.
             var html, incDiv;
             if (type == "inc") {
-                html = '<div class="item clearfix" id="income-%id%"><div div class="item__description" >$description$</div ><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div > ';
+                html = '<div class="item clearfix" id="inc-%id%"><div div class="item__description" >$description$</div ><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div > ';
                 incDiv = document.querySelector(DOMstrings.incomeList);
             } else {
-                html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">$description$</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%  </div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div>';
+                html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">$description$</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%  </div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div>';
                 incDiv = document.querySelector(DOMstrings.expList);
             }
             //ter html dotroo orlogo zarlagiin utgudg replace ashhiglaj oorcilj ogno.
@@ -147,7 +154,7 @@ var financeController = (function () {
             })
             var index = ids.indexOf(id);
             if (index !== -1) {
-                data.items.splice(index, 1);
+                data.items[type].splice(index, 1);
             }
         },
         //idgar n orlogo zarlaga ustgah.
@@ -162,7 +169,6 @@ var appController = (function (uiController, financeController) {
     function addItem() {
         // 1. oruulah ogogdliig delgetsees olj awna. 
         var input = uiController.getInput();
-        console.log(input.value);
         if (input.description !== "" && !isNaN(input.value)) {
             //buyu too oruulagv vyd nan alda zaadag.
 
@@ -186,14 +192,36 @@ var appController = (function (uiController, financeController) {
 
     var setupEventListener = function () {
         var DOM = uiController.getDOMstrings();
-        document.querySelector(DOM.addBtn).addEventListener("click", addItem)
+        document.querySelector(DOM.addBtn).addEventListener("click", addItem);
+
         document.addEventListener("keypress", function (event) {
             // enter edr daraad awhad ajilna. daragdsan towc n event gdgeer orj irne. daragdsan towc bvr keykodetoi tvvger n barijn awdag bhnee.
             if (event.keyCode === 13 || event.which == 13) {
                 // keycode bhgv vyd which n ymr c ylggv. 
                 addItem()
             }
-        })
+        });
+
+        document.querySelector(DOM.containerDiv).addEventListener("click", function (event) {
+            console.log(event.target.parentNode.parentNode.parentNode.parentNode.id);
+            //buyu tuhain container dotor bui icon deer darhad medreh bolowc darsan gazraas hed deeshe ywd id bgan gdg deere ocjin.
+
+            var fullId = event.target.parentNode.parentNode.parentNode.parentNode.id;  //inc-2 exp-1
+            if (fullId) {   //buyu oor gazar darcij bolood id irqv vyd ajilcij boloh tul id irvvl true bhgv bol false bolgcdg gsn vg.
+                var arr = fullId.split("-");
+                // 1. sanhvvgin modulias ustgaj ogno.
+                financeController.deleteItem(arr[0], parseInt(arr[1]));
+
+                // 2. delgets deeres elmentiig ustgana.
+                uiController.removeEventListenerItem(fullId);
+
+
+                // 3. vldegdel tootsoog shinecilj haruulna.
+                financeController.tosovTootsooloh();
+                var tusuv = financeController.tusviigAvah();
+                uiController.tusviigUzuuleh(tusuv);
+            }
+        });
     };
 
     return {
