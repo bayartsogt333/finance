@@ -12,7 +12,7 @@ var uiController = (function () {
         expeseLabel: ".budget__expenses--value",
         percentageLabel: ".budget__expenses--percentage"
     }
-    //gej ogsnoor css deer clas sin oorcllt orhd solihod amar onowctoin boldog.
+    //gej ogsnoor css deer classin oorcllt orhd solihod amar onowctoin boldog.
 
     return {
         getInput: function () {
@@ -27,7 +27,6 @@ var uiController = (function () {
         getDOMstrings: function () {
             return DOMstrings;
         },
-
         clearFields: function () {
             var fields = document.querySelectorAll(DOMstrings.inputDescription + ", " + DOMstrings.inputValue);
             //olon ym zereg selectleheer bol ingene ghde list bitsaj irdeg.
@@ -38,11 +37,10 @@ var uiController = (function () {
             fieldsArr.forEach(function (el, index, array) {
                 el.value = "";
             });
-            //massiwin elment bolgon eleer orj irne.
+            //massiwin elment bolgon eleer orj irne. tvvnig n hooson bolgjnl gsn vg.
 
             fieldsArr[0].focus();
             //gewel cursoriig haana awaachu gdg code. focus ogjn gsn vg. 
-
         },
         tusviigUzuuleh: function (tusuv) {
             document.querySelector(DOMstrings.tusuvLabel).textContent = tusuv.tusuv;
@@ -58,11 +56,12 @@ var uiController = (function () {
                 html = '<div class="item clearfix" id="income-%id%"><div div class="item__description" >$description$</div ><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div > ';
                 incDiv = document.querySelector(DOMstrings.incomeList);
             } else {
-                html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">$description$</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">$$huvi$$</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div>';
+                html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">$description$</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%  </div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div>';
                 incDiv = document.querySelector(DOMstrings.expList);
             }
-            //ter html dotroo orlogo zarlagiin utgudg replace ashhiglaj     oorcilj ogno.
+            //ter html dotroo orlogo zarlagiin utgudg replace ashhiglaj oorcilj ogno.
             html = html.replace('%id%', item.id);
+            //buyu daraan ustgahiin tuld id-nuudg n neg bvrclen onooj baina.
             html = html.replace("$description$", item.description);
             html = html.replace('%value%', item.value);
 
@@ -98,11 +97,11 @@ var financeController = (function () {
         items: {
             inc: [],
             exp: []
-        },
+        }, //objectvvdg aguulna.
         totals: {
             inc: 0,
             exp: 0
-        },
+        },  //niit niilbervvd
         tusuv: 0,
         huvi: 0
     }
@@ -142,6 +141,16 @@ var financeController = (function () {
             data.items[type].push(item);
             return item;
         },
+        deleteItem: function (type, id) {
+            var ids = data.items[type].map(function (el) {
+                return el.id;
+            })
+            var index = ids.indexOf(id);
+            if (index !== -1) {
+                data.items.splice(index, 1);
+            }
+        },
+        //idgar n orlogo zarlaga ustgah.
         getData: function () {
             return data;
         },
@@ -162,7 +171,6 @@ var appController = (function (uiController, financeController) {
 
             // 3. olj awsan ogogdlvvde tohiroh hesegt n gargana.
             uiController.addEventListenertItem(item, input.type);
-
             uiController.clearFields();
 
             // 4. tosowiig tootsoolno. 
@@ -200,7 +208,6 @@ var appController = (function (uiController, financeController) {
             setupEventListener();
         }
     }
-
     //ingej bgan bid daldalj return hij functionoor handuul ilv zvger bhnee. 
 })(uiController, financeController);
 
