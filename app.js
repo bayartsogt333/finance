@@ -12,17 +12,43 @@ var uiController = (function () {
         expeseLabel: ".budget__expenses--value",
         percentageLabel: ".budget__expenses--percentage",
         containerDiv: ".container",
-        expensePercentageLabel: ".item__percentage"
+        expensePercentageLabel: ".item__percentage",
+        dateLabel: ".budget__title--month"
     };
     //gej ogsnoor css deer classin oorcllt orhd solihod amar onowctoin boldog.
+    var formatMoney = function (too, type) {
+        too = '' + too; //temdegt mor lvv horwvvlew.
+        var x = too.split(""); //ingd huwaacul neg neger n salgd massiwt hiicdg.
+        x = x.reverse(); //massiwig shuud ergvldg buyu araas n eheldg bolgodg. 
+        x = x.join("");  //splitiin esreg buyu massiwig zalgana. tgd dund n u tawiha zana.
+        var y = '';
+        var count = 0;
+        for (var i = 0; i < x.length; i++) {
+            y = y + x[i];
+            count++;
+            if (count % 3 === 0)
+                y = y + ',';
+        }
+        y = y.split("").reverse().join("");  //massiwiig l ergvldg function gsn vg.
+        //taslal nemew. 
+        if (y[0] === ',')
+            y = y.substr(1, y.length - 1);
+        if (type === 'inc') y = '+' + y;
+        else if (type === 'exp') y = '-' + y;
+        return y;
+    };
 
     var nodeListForEach = function (list, callback) {
         for (var i = 0; i < list.length; i++) {
             callback(list[i], i);
         }
-    }
+    };
 
     return {
+        displayDate: function () {
+            var unuudur = new Date();
+            document.querySelector(DOMstrings.dateLabel).textContent = unuudur.getMonth() + " сарын " + unuudur.getDay();
+        },
         getInput: function () {
             return {
                 type: document.querySelector(DOMstrings.inputType).value,  //buyu + ymu - ymu gdgiig valueaar n medjiin inc exp
@@ -60,9 +86,12 @@ var uiController = (function () {
             //gewel cursoriig haana awaachu gdg code. focus ogjn gsn vg. 
         },
         tusviigUzuuleh: function (tusuv) {
-            document.querySelector(DOMstrings.tusuvLabel).textContent = tusuv.tusuv;
-            document.querySelector(DOMstrings.incomeLabel).textContent = tusuv.totalInc;
-            document.querySelector(DOMstrings.expeseLabel).textContent = tusuv.totalExp;
+            var type;
+            if (tusuv.tusuv >= 0) type = 'inc'
+            else type = 'exp';
+            document.querySelector(DOMstrings.tusuvLabel).textContent = formatMoney(tusuv.tusuv, type);
+            document.querySelector(DOMstrings.incomeLabel).textContent = formatMoney(tusuv.totalInc, 'inc');
+            document.querySelector(DOMstrings.expeseLabel).textContent = formatMoney(tusuv.totalExp, 'exp');
             document.querySelector(DOMstrings.percentageLabel).textContent = tusuv.huvi + '%';
         },
         removeEventListenerItem: function (id) {
@@ -86,7 +115,7 @@ var uiController = (function () {
             html = html.replace('%id%', item.id);
             //buyu daraan ustgahiin tuld id-nuudg n neg bvrclen onooj baina.
             html = html.replace("$description$", item.description);
-            html = html.replace('%value%', item.value);
+            html = html.replace('%value%', formatMoney(item.value, type));
 
             //beltgesem htmlee dom ruu hiij ogno.
             incDiv.insertAdjacentHTML("beforeend", html);
@@ -277,6 +306,7 @@ var appController = (function (uiController, financeController) {
     return {
         init: function () {
             console.log("App start...");
+            uiController.displayDate();
             uiController.tusviigUzuuleh({
                 tusuv: 0,
                 huvi: 0,
