@@ -13,7 +13,8 @@ var uiController = (function () {
         percentageLabel: ".budget__expenses--percentage",
         containerDiv: ".container",
         expensePercentageLabel: ".item__percentage",
-        dateLabel: ".budget__title--month"
+        dateLabel: ".budget__title--month",
+        checkButtonLabel: ".ion-ios-checkmark-outline"
     };
     //gej ogsnoor css deer classin oorcllt orhd solihod amar onowctoin boldog.
     var formatMoney = function (too, type) {
@@ -48,6 +49,13 @@ var uiController = (function () {
         displayDate: function () {
             var unuudur = new Date();
             document.querySelector(DOMstrings.dateLabel).textContent = unuudur.getMonth() + " сарын " + unuudur.getDay();
+        },
+        changeType: function () {
+            var fields = document.querySelectorAll(DOMstrings.inputType + ', ' + DOMstrings.inputDescription + ', ' + DOMstrings.inputValue);
+            nodeListForEach(fields, function (el) {
+                el.classList.toggle('red-focus');
+            });
+            window.document.querySelector(DOMstrings.checkButtonLabel).classList.toggle('red');
         },
         getInput: function () {
             return {
@@ -88,7 +96,7 @@ var uiController = (function () {
         tusviigUzuuleh: function (tusuv) {
             var type;
             if (tusuv.tusuv >= 0) type = 'inc'
-            else type = 'exp';
+            else type = 'exp'
             document.querySelector(DOMstrings.tusuvLabel).textContent = formatMoney(tusuv.tusuv, type);
             document.querySelector(DOMstrings.incomeLabel).textContent = formatMoney(tusuv.totalInc, 'inc');
             document.querySelector(DOMstrings.expeseLabel).textContent = formatMoney(tusuv.totalExp, 'exp');
@@ -283,6 +291,8 @@ var appController = (function (uiController, financeController) {
                 addItem()
             }
         });
+        document.querySelector(DOM.inputType).addEventListener("change", uiController.changeType);
+        //change buyu selectes oor ym selectlhd ajilna gsn vg.
 
         document.querySelector(DOM.containerDiv).addEventListener("click", function (event) {
             console.log(event.target.parentNode.parentNode.parentNode.parentNode.id);
